@@ -1,0 +1,162 @@
+<html>
+    <body background="sn2.jpg">
+
+        <h1>ANGRY SNEK</h1>
+        <h2>press RIGTH to play....only left and right works for now</h2>><br><br>
+        <canvas id="myCanvas" width="640px" height="640px" style="border: 10px solid #000;" ></canvas>
+
+        
+
+        <script>
+            const canvas = document.getElementById("myCanvas");
+            const context = canvas.getContext("2d"); 
+
+
+
+            var deltaX = 0;
+            var deltaY = 0;
+            
+            window.addEventListener("keydown", keysPressed, false);
+            window.addEventListener("keyup", keysReleased, false);
+            
+            var keys = [];
+            
+            
+            class Snake{
+                constructor(color){
+                    this.color = color;
+                    this.length = 50;
+                    this.x = canvas.width / 8;
+                    this.y = canvas.height / 2;
+                    this.xChange = 10;
+                    this.yChange = 10;
+                    this.score = 0;
+                }
+
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, this.length, 10);
+                    context.fillStyle = this.color;
+                    context.fill();
+                    context.strokeStyle = this.color;
+                    context.stroke();
+                }
+
+                /*move(){
+                    if(this.x >= canvas.width){
+                        this.xChange *= -1;                        
+                    }
+                    if(this.x < -1){
+                        this.xChange *= -1;                        
+                    }
+                    this.x += this.xChange;
+                    //console.log(this.x);                                   
+                }*/
+                move(){                    
+                    this.x += deltaX;               
+                    
+                }
+
+                eat(food){                    
+                    if(this.x === food){
+                        this.length += 50;
+                    }
+                }
+                
+                
+                
+            }
+
+            class Food{
+                constructor(){
+                    this.x = 100;
+                    this.y = canvas.width / 2;
+                }
+                draw(){
+                    context.beginPath();
+                    context.rect(this.x, this.y, 10, 10);
+                    context.fillStyle = "black";
+                    context.fill();
+                    context.strokeStyle = "black";
+                    context.stroke();
+                }                    
+                
+            }
+
+            class Score{
+                constructor(){
+                    this.score = 0;                                        
+                }
+
+                draw(food,x){                    
+                    if(food == x){
+                        this.score += 1;
+                    }
+                    context.font = "40px Verdana"
+                    context.strokeText("SCORE",10,50);
+                    context.strokeText(this.score,170,50);
+                    context.fill();                
+                }
+            }
+
+            
+            var play
+
+            const gratzimo = new Snake("black");
+            const food1 = new Food();
+            const score1 = new Score();
+            function canvasDraw(){
+                context.clearRect(0,0, canvas.width, canvas.height);
+                food1.draw();
+                gratzimo.draw();
+                gratzimo.move();                               
+                gratzimo.eat(food1.x);                                
+                score1.draw(food1.x,gratzimo.x);
+            }
+            
+
+                function keysPressed(e) {
+                // store an entry for every key pressed
+                keys[e.keyCode] = true;
+            
+                // left
+                if (keys[37]) {
+                deltaX = -10;
+                }
+            
+                // right
+                if (keys[39]) {
+                deltaX = +10;
+                }
+            
+                // down
+                if (keys[38]) {
+                deltaY -= 2;
+                }
+            
+                // up
+                if (keys[40]) {
+                deltaY += 2;
+                }
+            
+                e.preventDefault();
+            
+                canvasDraw();
+            }
+            
+            function keysReleased(e) {
+                // mark keys that were released
+                keys[e.keyCode] = false;
+            }
+            
+            
+
+
+
+
+        </script>
+
+
+
+    </body>
+</html>
